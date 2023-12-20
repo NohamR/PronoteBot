@@ -2,7 +2,6 @@ import pronotepy
 from pronotepy.ent import ile_de_france
 from datetime import date
 from datetime import datetime
-import schedule
 import time
 import json
 import requests
@@ -31,77 +30,82 @@ def envoyer_message_webhook(contenu):
         print(f"Échec de l'envoi du message. Code d'état : {response.status_code}")
 
 def refresh(send):
-    client = pronotepy.Client('https://0910626l.index-education.net/pronote/eleve.html',
-                        username=ENT_USERNAME,
-                        password=ENT_PASSWORD,
-                        ent=ile_de_france)
-    if not client.logged_in:
-        exit(1)
+    try :
+        client = pronotepy.Client('https://0910626l.index-education.net/pronote/eleve.html',
+                            username=ENT_USERNAME,
+                            password=ENT_PASSWORD,
+                            ent=ile_de_france)
+        if not client.logged_in:
+            exit(1)
 
-    if send == 1:
-        with open(path + 'grades.txt', 'r') as file:
-            prev_grades = json.load(file)
+        if send == 1:
+            with open(path + 'grades.txt', 'r') as file:
+                prev_grades = json.load(file)
 
-        with open(path + 'average.txt', 'r') as file:
-            prev_average = json.load(file)
+            with open(path + 'average.txt', 'r') as file:
+                prev_average = json.load(file)
 
-    new_average = client.periods[0].overall_average
+        new_average = client.periods[0].overall_average
 
-    new_grades_list = []
-    for period in client.periods:
-        for grade in period.grades:
-            obj = grade.date
-            gooddate = obj.isoformat()
-            grade_dict = {
-                'grade': grade.grade,
-                'average': grade.average,
-                'coefficient': grade.coefficient,
-                'comment': grade.comment,
-                'date': gooddate,
-                'default_out_of': grade.default_out_of,
-                # 'id': grade.id,
-                'is_bonus': grade.is_bonus,
-                'is_optional': grade.is_optionnal,
-                'is_out_of_20': grade.is_out_of_20,
-                'max': grade.max,
-                'min': grade.min,
-                'out_of': grade.out_of,
-                # 'period_id': grade.period.id,
-                'period_name': grade.period.name,
-                # 'subject_id': grade.subject.id,
-                'subject_groups': grade.subject.groups,
-                'subject_name': grade.subject.name,
-                }
-            new_grades_list.append(grade_dict)
-    if send == 1:
-        if len(new_grades_list) != len(prev_grades):
-            changes = 0
-            while len(new_grades_list) != len(prev_grades):
-                prev_grades.append('tmp')
-            for i,old in zip(new_grades_list, prev_grades):
-                
-                if i != old:
-                    changes+=1           
-                if changes == 1:
-                    content = f"""**{i['subject_name']}** : {i['comment']}
-                    {datetime.strptime(str(i['date']), "%Y-%m-%d").strftime("%d %B %Y")}
-                    **{i['grade']}/{i['out_of']}** | Coef : {i['coefficient']}
-                    Moy : **{i['average']}/{i['out_of']}**
-                    :arrow_up_small: : {i['max']}/{i['out_of']} | :arrow_down_small: : {i['min']}/{i['out_of']}
+        new_grades_list = []
+        for period in client.periods:
+            for grade in period.grades:
+                obj = grade.date
+                gooddate = obj.isoformat()
+                grade_dict = {
+                    'grade': grade.grade,
+                    'average': grade.average,
+                    'coefficient': grade.coefficient,
+                    'comment': grade.comment,
+                    'date': gooddate,
+                    'default_out_of': grade.default_out_of,
+                    # 'id': grade.id,
+                    'is_bonus': grade.is_bonus,
+                    'is_optional': grade.is_optionnal,
+                    'is_out_of_20': grade.is_out_of_20,
+                    'max': grade.max,
+                    'min': grade.min,
+                    'out_of': grade.out_of,
+                    # 'period_id': grade.period.id,
+                    'period_name': grade.period.name,
+                    # 'subject_id': grade.subject.id,
+                    'subject_groups': grade.subject.groups,
+                    'subject_name': grade.subject.name,
+                    }
+                new_grades_list.append(grade_dict)
+        if send == 1:
+            if len(new_grades_list) != len(prev_grades):
+                changes = 0
+                while len(new_grades_list) != len(prev_grades):
+                    prev_grades.append('tmp')
+                for i,old in zip(new_grades_list, prev_grades):
+                    
+                    if i != old:
+                        changes+=1           
+                    if changes == 1:
+                        content = f"""**{i['subject_name']}** : {i['comment']}
+                        {datetime.strptime(str(i['date']), "%Y-%m-%d").strftime("%d %B %Y")}
+                        **{i['grade']}/{i['out_of']}** | Coef : {i['coefficient']}
+                        Moy : **{i['average']}/{i['out_of']}**
+                        :arrow_up_small: : {i['max']}/{i['out_of']} | :arrow_down_small: : {i['min']}/{i['out_of']}
 
-                    Moy G : {new_average}({float(new_average)-float(prev_average)})
-                    """
-                    print('content: ', content)
-                    envoyer_message_webhook(content)
-        else:
-            print(f'{datetime.now().strftime("%H:%M")} : No change')
+                        Moy G : {new_average}({float(new_average)-float(prev_average)})
+                        """
+                        print('content: ', content)
+                        envoyer_message_webhook(content)
+            else:
+                print(f'{datetime.now().strftime("%H:%M")} : No change')
 
-    ################
-    with open(path + 'grades.txt', 'w') as file:
-        json.dump(new_grades_list, file, indent=2, default=date_encoder)
+        ################
+        with open(path + 'grades.txt', 'w') as file:
+            json.dump(new_grades_list, file, indent=2, default=date_encoder)
 
-    with open(path + 'average.txt', 'w') as file:
-        json.dump(new_average, file, indent=2)
+        with open(path + 'average.txt', 'w') as file:
+            json.dump(new_average, file, indent=2)
+
+        return 1
+    except Exception as e:
+        return e
 
 
 # schedule.every(20).minutes.do(refresh)
@@ -111,19 +115,25 @@ def refresh(send):
 #     time.sleep(1)
 
 
-try:
-    refresh(send = 0)
-except Exception as e:
-    print(e)
-    refresh(send = 0)
+status = 0
+while status != 1:
+    status = refresh(send = 0)
+    if status != 1 :
+        print(status)
+        envoyer_message_webhook(status)
+        time.sleep(2*60)
+
 min = 20
 print('refresh rate: ', 20)
 while True:
-    try:
-        refresh(send = 1)
-    except Exception as e:
-        print(e)
-        refresh(send = 1)
+    status = 0
+    while status != 1:
+        status = refresh(send = 1)
+        if status != 1 :
+            print(status)
+            envoyer_message_webhook(status)
+            time.sleep(2*60)
+
     time.sleep(min*60)
 
 ### debug

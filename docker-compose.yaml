@@ -1,0 +1,54 @@
+name: pronoteapi
+services:
+  app:
+    cpu_shares: 90
+    command: []
+    deploy:
+      resources:
+        limits:
+          memory: 7943M
+    image: pronoteapi:latest
+    labels:
+      icon: https://camo.githubusercontent.com/3ae516af10d2a609989fece36dda63f4d10ee30cca1dd46564454c5bb07697c9/68747470733a2f2f70726f6e6f746570792e72656164746865646f63732e696f2f656e2f6c61746573742f5f696d616765732f69636f6e2e706e67
+    restart: unless-stopped
+    x-casaos:
+      envs:
+        - container: LOG_LEVEL
+          description:
+            en_us: Log level
+        - container: TZ
+          description:
+            en_us: Timezone
+      volumes:
+        - container: /app/config
+          description:
+            en_us: "Container Path: /app/config"
+    ports: []
+    volumes: []
+    devices: []
+    cap_add: []
+    environment: []
+    network_mode: bridge
+    privileged: false
+    container_name: ""
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: nohamr
+  category: Api
+  description:
+    en_us: Recup tes notes sur pronote et les envoie sur un webhooks
+  developer: nohamr
+  hostname: 0910626l.index-education.net/pronote/eleve.html?identifiant=rb5yNZw4HrWKHrcK
+  icon: https://camo.githubusercontent.com/3ae516af10d2a609989fece36dda63f4d10ee30cca1dd46564454c5bb07697c9/68747470733a2f2f70726f6e6f746570792e72656164746865646f63732e696f2f656e2f6c61746573742f5f696d616765732f69636f6e2e706e67
+  index: /
+  main: app
+  port_map: ""
+  scheme: https
+  store_app_id: pronoteapi
+  tagline:
+    en_us: Recup tes notes sur pronote et les envoie sur un webhooks
+  title:
+    custom: ""
+    en_us: PronoteApi
