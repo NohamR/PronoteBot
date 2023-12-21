@@ -143,6 +143,8 @@ while True:
             time.sleep(2*60)
         elif content != '':
             envoyer_message_webhook(content)
+        else :
+            print('No change')
     time.sleep(min*60)
 
 # ### debug
