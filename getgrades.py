@@ -31,6 +31,7 @@ def envoyer_message_webhook(contenu):
         print(f"Échec de l'envoi du message. Code d'état : {response.status_code}")
 
 def refresh(send):
+    content = ''
     try :
         client = pronotepy.Client('https://0910626l.index-education.net/pronote/eleve.html',
                             username=ENT_USERNAME,
@@ -74,26 +75,24 @@ def refresh(send):
                     'subject_name': grade.subject.name,
                     }
                 new_grades_list.append(grade_dict)
-        if send == 1:
-            if len(new_grades_list) != len(prev_grades):
-                changes = 0
-                while len(new_grades_list) != len(prev_grades):
-                    prev_grades.append('tmp')
-                for i,old in zip(new_grades_list, prev_grades):
-                    
-                    if i != old:
-                        changes+=1           
-                    if changes == 1:
-                        content = f"""**{i['subject_name']}** : {i['comment']}
-                        {datetime.strptime(str(i['date']), "%Y-%m-%d").strftime("%d %B %Y")}
-                        **{i['grade']}/{i['out_of']}** | Coef : {i['coefficient']}
-                        Moy : **{i['average']}/{i['out_of']}**
-                        :arrow_up_small: : {i['max']}/{i['out_of']} | :arrow_down_small: : {i['min']}/{i['out_of']}
+        if len(new_grades_list) != len(prev_grades):
+            changes = 0
+            while len(new_grades_list) != len(prev_grades):
+                prev_grades.append('tmp')
+            for i,old in zip(new_grades_list, prev_grades):
+                
+                if i != old:
+                    changes+=1           
+                if changes == 1:
+                    content = f"""**{i['subject_name']}** : {i['comment']}
+                    {datetime.strptime(str(i['date']), "%Y-%m-%d").strftime("%d %B %Y")}
+                    **{i['grade']}/{i['out_of']}** | Coef : {i['coefficient']}
+                    Moy : **{i['average']}/{i['out_of']}**
+                    :arrow_up_small: : {i['max']}/{i['out_of']} | :arrow_down_small: : {i['min']}/{i['out_of']}
 
-                        Moy G : {new_average}({float(new_average)-float(prev_average)})
-                        """
-                        print('content: ', content)
-                        envoyer_message_webhook(content)
+                    Moy G : {new_average}({float(new_average)-float(prev_average)})
+                    """
+                    print('content: ', content)
             else:
                 print(f'{datetime.now().strftime("%H:%M")} : No change')
 
@@ -104,9 +103,9 @@ def refresh(send):
         with open(path + 'average.txt', 'w') as file:
             json.dump(new_average, file, indent=2)
 
-        return 1
+        return 1, content
     except Exception as e:
-        return e
+        return e, content
 
 
 # schedule.every(20).minutes.do(refresh)
@@ -118,7 +117,7 @@ def refresh(send):
 
 status = 0
 while status != 1:
-    status = refresh(send = 0)
+    status, content = refresh(send = 0)
     if status != 1 :
         print(status)
         envoyer_message_webhook(status)
@@ -129,11 +128,13 @@ print('refresh rate: ', 20)
 while True:
     status = 0
     while status != 1:
-        status = refresh(send = 1)
+        status, content = refresh(send = 1)
         if status != 1 :
             print(status)
             envoyer_message_webhook(status)
             time.sleep(2*60)
+        elif content != '':
+            envoyer_message_webhook(content)
 
     time.sleep(min*60)
 
