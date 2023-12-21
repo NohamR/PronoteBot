@@ -24,11 +24,14 @@ def envoyer_message_webhook(contenu):
     data = {
         'content': contenu
     }
-    response = requests.post(DISCORD_WEBHOOKS_PRONOTE, json=data)
-    if response.status_code == 204:
-        print(f'{datetime.now().strftime("%H:%M")} : Send')
-    else:
-        print(f"Échec de l'envoi du message. Code d'état : {response.status_code}")
+    try:
+        response = requests.post(DISCORD_WEBHOOKS_PRONOTE, json=data)
+        if response.status_code == 204:
+            print(f'{datetime.now().strftime("%H:%M")} : Send')
+        else:
+            print(f"Échec de l'envoi du message. Code d'état : {response.status_code}")
+    except Exception as e:
+        print(e)
 
 def refresh(send):
     content = ''
@@ -75,26 +78,28 @@ def refresh(send):
                     'subject_name': grade.subject.name,
                     }
                 new_grades_list.append(grade_dict)
-        if len(new_grades_list) != len(prev_grades):
-            changes = 0
-            while len(new_grades_list) != len(prev_grades):
-                prev_grades.append('tmp')
-            for i,old in zip(new_grades_list, prev_grades):
-                
-                if i != old:
-                    changes+=1           
-                if changes == 1:
-                    content = f"""**{i['subject_name']}** : {i['comment']}
-                    {datetime.strptime(str(i['date']), "%Y-%m-%d").strftime("%d %B %Y")}
-                    **{i['grade']}/{i['out_of']}** | Coef : {i['coefficient']}
-                    Moy : **{i['average']}/{i['out_of']}**
-                    :arrow_up_small: : {i['max']}/{i['out_of']} | :arrow_down_small: : {i['min']}/{i['out_of']}
 
-                    Moy G : {new_average}({float(new_average)-float(prev_average)})
-                    """
-                    print('content: ', content)
-            else:
-                print(f'{datetime.now().strftime("%H:%M")} : No change')
+        if send == 1:
+            if len(new_grades_list) != len(prev_grades):
+                changes = 0
+                while len(new_grades_list) != len(prev_grades):
+                    prev_grades.append('tmp')
+                for i,old in zip(new_grades_list, prev_grades):
+                    
+                    if i != old:
+                        changes+=1           
+                    if changes == 1:
+                        content = f"""**{i['subject_name']}** : {i['comment']}
+                        {datetime.strptime(str(i['date']), "%Y-%m-%d").strftime("%d %B %Y")}
+                        **{i['grade']}/{i['out_of']}** | Coef : {i['coefficient']}
+                        Moy : **{i['average']}/{i['out_of']}**
+                        :arrow_up_small: : {i['max']}/{i['out_of']} | :arrow_down_small: : {i['min']}/{i['out_of']}
+
+                        Moy G : {new_average}({float(new_average)-float(prev_average)})
+                        """
+                        print('content: ', content)
+                else:
+                    print(f'{datetime.now().strftime("%H:%M")} : No change')
 
         ################
         with open(path + 'grades.txt', 'w') as file:
@@ -118,10 +123,13 @@ def refresh(send):
 status = 0
 while status != 1:
     status, content = refresh(send = 0)
+    print('content: ', content)
+    print('status: ', status)
     if status != 1 :
         print(status)
         envoyer_message_webhook(status)
         time.sleep(2*60)
+
 
 min = 20
 print('refresh rate: ', 20)
@@ -135,8 +143,7 @@ while True:
             time.sleep(2*60)
         elif content != '':
             envoyer_message_webhook(content)
-
     time.sleep(min*60)
 
-### debug
-# refresh(send=1)
+# ### debug
+# # refresh(send=1)
