@@ -1,6 +1,7 @@
 # PronoteBot
 
 PronoteBot est un projet conçu pour faciliter la récupération des notes Pronote et envoyer des mises à jour à un webhook. Il utilise la bibliothèque [pronotepy](https://github.com/bain3/pronotepy) pour les interactions avec Pronote.
+![exemple.png](exemple.png)
 
 ## Dépendances
 
