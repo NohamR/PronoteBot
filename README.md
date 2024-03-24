@@ -15,34 +15,34 @@ Pour utiliser PronoteBot, suivez ces étapes :
 
 1. Clonez le dépôt :
 
-   ```bash
-   git clone https://github.com/NohamR/PronoteBot.git
-   cd PronoteBot
-    ```
+```bash
+git clone https://github.com/NohamR/PronoteBot.git
+cd PronoteBot
+```
 
 2. Installez les dépendances :
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
 
 3. Configurez vos variables d'environnement en créant un fichier .env avec le contenu suivant :
     
-    ```bash
-    DISCORD_WEBHOOKS_PRONOTE=your_discord_webhook_url
-    ENT_USERNAME=your_ent_username
-    ENT_PASSWORD=your_ent_password
-    ENT=name_of_ent 
-    ```
+```bash
+DISCORD_WEBHOOKS_PRONOTE=your_discord_webhook_url
+ENT_USERNAME=your_ent_username
+ENT_PASSWORD=your_ent_password
+ENT=name_of_ent 
+```
 
 Pour avoir le nom de votre ent : [ici](https://pronotepy.readthedocs.io/en/stable/api/ent.html), par exemple : ile_de_france.
 
 4. Exécutez le script PronoteBot :
     
-    ```bash
-    python3 getgrades.py
-    ```
+```bash
+python3 getgrades.py
+```
 
 
 ## Docker
@@ -55,11 +55,15 @@ Le fichier Dockerfile est disponible [ici](Dockerfile). Assurez-vous de le place
 
 Pour construire l'image Docker, exécutez la commande suivante à la racine du répertoire PronoteBot :
 
-    docker build -t PronoteBot:latest .
-    docker run -d PronoteBot:latest
+```bash
+docker build -t PronoteBot:latest .
+docker run -d PronoteBot:latest
+```
 
 ### docker-compose.yaml
 
 Le fichier docker-compose.yaml  est disponible [ici](docker-compose.yaml). Assurez-vous de le placer à la racine du répertoire PronoteBot.
 
-    docker-compose up -d
+```bash
+docker-compose up -d
+```

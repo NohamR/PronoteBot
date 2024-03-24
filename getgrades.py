@@ -11,6 +11,8 @@ load_dotenv()
 DISCORD_WEBHOOKS_PRONOTE = os.getenv("DISCORD_WEBHOOKS_PRONOTE")
 ENT_USERNAME = os.getenv("ENT_USERNAME")
 ENT_PASSWORD = os.getenv("ENT_PASSWORD")
+PRNT_USERNAME = os.getenv("PRNT_USERNAME")
+PRNT_PASSWORD = os.getenv("PRNT_PASSWORD")
 ENT = os.getenv("ENT")
 path = 'new/pronote/'
 path =''
@@ -36,10 +38,13 @@ def envoyer_message_webhook(contenu):
 def refresh(send):
     content = ''
     try :
-        client = pronotepy.Client('https://0910626l.index-education.net/pronote/eleve.html',
-                            username=ENT_USERNAME,
-                            password=ENT_PASSWORD,
-                            ent=globals().get(ENT)) #ile_de_france
+        # client = pronotepy.Client('https://0910626l.index-education.net/pronote/eleve.html',
+        #                     username=ENT_USERNAME,
+        #                     password=ENT_PASSWORD,
+        #                     ent=globals().get(ENT)) #ile_de_france
+        client = pronotepy.Client('https://0910626l.index-education.net/pronote/eleve.html?login=true',
+                            username=PRNT_USERNAME,
+                            password=PRNT_PASSWORD)
         if not client.logged_in:
             exit(1)
 
