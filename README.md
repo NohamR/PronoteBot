@@ -33,7 +33,9 @@ pip install -r requirements.txt
 DISCORD_WEBHOOKS_PRONOTE=your_discord_webhook_url
 ENT_USERNAME=your_ent_username
 ENT_PASSWORD=your_ent_password
-ENT=name_of_ent 
+ENT=name_of_ent
+PRNT_USERNAME=your_pronote_username
+PRNT_PASSWORD=your_pronote_password 
 ```
 
 Pour avoir le nom de votre ent : [ici](https://pronotepy.readthedocs.io/en/stable/api/ent.html), par exemple : ile_de_france.
