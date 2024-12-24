@@ -1,6 +1,7 @@
-# PronoteApi
+# PronoteBot
 
-PronoteApi est un projet conçu pour faciliter la récupération des notes Pronote et envoyer des mises à jour à un webhook. Il utilise la bibliothèque [pronotepy](https://github.com/bain3/pronotepy) pour les interactions avec Pronote.
+PronoteBot est un projet conçu pour faciliter la récupération des notes Pronote et envoyer des mises à jour à un webhook. Il utilise la bibliothèque [pronotepy](https://github.com/bain3/pronotepy) pour les interactions avec Pronote.
+![exemple.png](exemple.png)
 
 ## Dépendances
 
@@ -10,55 +11,61 @@ PronoteApi est un projet conçu pour faciliter la récupération des notes Prono
 
 ## Utilisation
 
-Pour utiliser PronoteApi, suivez ces étapes :
+Pour utiliser PronoteBot, suivez ces étapes :
 
 1. Clonez le dépôt :
 
-   ```bash
-   git clone https://github.com/NohamR/PronoteApi.git
-   cd PronoteApi
-    ```
+```bash
+git clone https://github.com/NohamR/PronoteBot.git
+cd PronoteBot
+```
 
 2. Installez les dépendances :
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
 
 3. Configurez vos variables d'environnement en créant un fichier .env avec le contenu suivant :
     
-    ```bash
-    DISCORD_WEBHOOKS_PRONOTE=your_discord_webhook_url
-    ENT_USERNAME=your_ent_username
-    ENT_PASSWORD=your_ent_password
-    ENT=name_of_ent 
-    ```
+```bash
+DISCORD_WEBHOOKS_PRONOTE=your_discord_webhook_url
+ENT_USERNAME=your_ent_username
+ENT_PASSWORD=your_ent_password
+ENT=name_of_ent
+PRNT_USERNAME=your_pronote_username
+PRNT_PASSWORD=your_pronote_password 
+```
 
 Pour avoir le nom de votre ent : [ici](https://pronotepy.readthedocs.io/en/stable/api/ent.html), par exemple : ile_de_france.
 
-4. Exécutez le script PronoteApi :
+4. Exécutez le script PronoteBot :
     
-    ```bash
-    python3 getgrades.py
-    ```
+```bash
+python3 getgrades.py
+```
 
 
 ## Docker
 
-Vous pouvez également construire et exécuter PronoteApi en tant que conteneur Docker. Utilisez les configurations Dockerfile et docker-compose.yaml suivantes :
+Vous pouvez également construire et exécuter PronoteBot en tant que conteneur Docker. Utilisez les configurations Dockerfile et docker-compose.yaml suivantes :
 
 ### Dockerfile
 
-Le fichier Dockerfile est disponible [ici](Dockerfile). Assurez-vous de le placer à la racine du répertoire PronoteApi.
+Le fichier Dockerfile est disponible [ici](Dockerfile). Assurez-vous de le placer à la racine du répertoire PronoteBot.
 
-Pour construire l'image Docker, exécutez la commande suivante à la racine du répertoire PronoteApi :
+Pour construire l'image Docker, exécutez la commande suivante à la racine du répertoire PronoteBot :
 
-    docker build -t pronoteapi:latest .
-    docker run -d pronoteapi:latest
+```bash
+docker build -t PronoteBot:latest .
+docker run -d PronoteBot:latest
+```
 
 ### docker-compose.yaml
 
-Le fichier docker-compose.yaml  est disponible [ici](docker-compose.yaml). Assurez-vous de le placer à la racine du répertoire PronoteApi.
+Le fichier docker-compose.yaml  est disponible [ici](docker-compose.yaml). Assurez-vous de le placer à la racine du répertoire PronoteBot.
 
-    docker-compose up -d
+```bash
+docker-compose up -d
+```
